@@ -1,0 +1,39 @@
+#include <Servo.h>
+
+Servo myServo;
+const int trigPin = 9;
+const int echoPin = 10;
+
+void setup() {
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  Serial.begin(9600);
+  myServo.attach(11);
+}
+
+int getDistance() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  long duration = pulseIn(echoPin, HIGH, 30000);
+  return duration * 0.034 / 2;
+}
+
+void loop() {
+  for (int angle = 15; angle <= 165; angle++) {
+    myServo.write(angle);
+    delay(30);
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(getDistance());
+  }
+  for (int angle = 165; angle >= 15; angle--) {
+    myServo.write(angle);
+    delay(30);
+    Serial.print(angle);
+    Serial.print(",");
+    Serial.println(getDistance());
+  }
+}
